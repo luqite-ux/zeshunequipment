@@ -7,15 +7,33 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { submitInquiry } from "@/lib/submit-inquiry"
 
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsSubmitted(true)
-    setTimeout(() => setIsSubmitted(false), 3000)
+    setIsSubmitting(true)
+    setSubmitError(null)
+    const fd = new FormData(e.currentTarget)
+    const result = await submitInquiry({
+      name: fd.get("name") as string,
+      email: fd.get("email") as string,
+      phone: (fd.get("phone") as string) || undefined,
+      company: (fd.get("company") as string) || undefined,
+      subject: [(fd.get("product") as string), (fd.get("industry") as string)].filter(Boolean).join(" | ") || undefined,
+      message: fd.get("message") as string,
+    })
+    setIsSubmitting(false)
+    if (result.ok) {
+      setIsSubmitted(true)
+    } else {
+      setSubmitError(result.error ?? "Submission failed. Please try again.")
+    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,29 +59,29 @@ export function ContactForm() {
         <div className="grid sm:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name *</Label>
-            <Input id="name" placeholder="John Smith" required />
+            <Input id="name" name="name" placeholder="John Smith" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="company">Company Name</Label>
-            <Input id="company" placeholder="Your Company Ltd." />
+            <Input id="company" name="company" placeholder="Your Company Ltd." />
           </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email Address *</Label>
-            <Input id="email" type="email" placeholder="email@example.com" required />
+            <Input id="email" name="email" type="email" placeholder="email@example.com" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone">Phone Number</Label>
-            <Input id="phone" placeholder="+1 234 567 890" />
+            <Input id="phone" name="phone" placeholder="+1 234 567 890" />
           </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="country">Country/Region</Label>
-            <Input id="country" placeholder="United States" />
+            <Input id="country" name="country" placeholder="United States" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="product">Product Interest</Label>
@@ -102,9 +120,10 @@ export function ContactForm() {
 
         <div className="space-y-2">
           <Label htmlFor="message">Project Details *</Label>
-          <Textarea 
-            id="message" 
-            placeholder="Please describe your requirements, including specifications, capacity, materials to process, and any special requirements..." 
+          <Textarea
+            id="message"
+            name="message"
+            placeholder="Please describe your requirements, including specifications, capacity, materials to process, and any special requirements..."
             rows={5}
             required
           />
@@ -137,15 +156,23 @@ export function ContactForm() {
           </div>
         </div>
 
-        <Button 
-          type="submit" 
+        {submitError && (
+          <p className="rounded-md bg-destructive/10 px-4 py-2 text-sm text-destructive">{submitError}</p>
+        )}
+        <Button
+          type="submit"
           className="w-full bg-primary hover:bg-accent text-primary-foreground font-semibold h-12 text-base"
-          disabled={isSubmitted}
+          disabled={isSubmitting || isSubmitted}
         >
           {isSubmitted ? (
             <>
               <CheckCircle className="h-5 w-5 mr-2" />
               Inquiry Submitted Successfully!
+            </>
+          ) : isSubmitting ? (
+            <>
+              <Send className="h-5 w-5 mr-2" />
+              Sending...
             </>
           ) : (
             <>
