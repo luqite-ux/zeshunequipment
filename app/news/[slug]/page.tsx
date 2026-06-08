@@ -121,67 +121,10 @@ export default async function NewsArticlePage({ params }: Props) {
               )}
 
               {/* Article Content */}
-              <div className="prose prose-lg max-w-none">
-                {article.content.split('\n\n').map((paragraph, index) => {
-                  // Handle headers
-                  if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-                    return (
-                      <h2 key={index} className="text-xl font-bold text-foreground mt-8 mb-4">
-                        {paragraph.replace(/\*\*/g, '')}
-                      </h2>
-                    )
-                  }
-                  // Handle bold text sections
-                  if (paragraph.includes('**')) {
-                    const parts = paragraph.split(/(\*\*[^*]+\*\*)/g)
-                    return (
-                      <p key={index} className="text-muted-foreground leading-relaxed mb-4">
-                        {parts.map((part, i) => {
-                          if (part.startsWith('**') && part.endsWith('**')) {
-                            return <strong key={i} className="text-foreground">{part.replace(/\*\*/g, '')}</strong>
-                          }
-                          return part
-                        })}
-                      </p>
-                    )
-                  }
-                  // Handle italic text
-                  if (paragraph.startsWith('*') && !paragraph.startsWith('**')) {
-                    return (
-                      <p key={index} className="text-muted-foreground leading-relaxed mb-4 italic">
-                        {paragraph.replace(/\*/g, '')}
-                      </p>
-                    )
-                  }
-                  // Handle list items
-                  if (paragraph.startsWith('- ')) {
-                    const items = paragraph.split('\n').filter(item => item.startsWith('- '))
-                    return (
-                      <ul key={index} className="list-disc list-inside space-y-2 mb-4">
-                        {items.map((item, i) => (
-                          <li key={i} className="text-muted-foreground">
-                            {item.replace('- ', '')}
-                          </li>
-                        ))}
-                      </ul>
-                    )
-                  }
-                  // Handle numbered lists
-                  if (/^\d+\./.test(paragraph)) {
-                    return (
-                      <p key={index} className="text-muted-foreground leading-relaxed mb-2 pl-4">
-                        {paragraph}
-                      </p>
-                    )
-                  }
-                  // Regular paragraphs
-                  return (
-                    <p key={index} className="text-muted-foreground leading-relaxed mb-4">
-                      {paragraph}
-                    </p>
-                  )
-                })}
-              </div>
+              <div
+                className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-img:rounded-lg"
+                dangerouslySetInnerHTML={{ __html: article.content }}
+              />
 
               {/* Share Section */}
               <div className="flex items-center gap-4 mt-12 pt-8 border-t border-border">
