@@ -16,9 +16,9 @@ node_modules
 .DS_Store
 .vercel
 
-# Large local image folders with Chinese filenames (served locally but too large for git)
+# Large local image folders (served from Supabase/R2; too large for git)
 public/images/products/
-public/images/Cases/
-public/images/Industries/
 public/images/News/
 Thumbs.db
+
+.vercel
