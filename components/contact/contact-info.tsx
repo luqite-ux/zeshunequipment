@@ -1,36 +1,58 @@
 "use client"
 
+import { useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
 import { Phone, Mail, MapPin, Clock, MessageCircle } from "lucide-react"
-
-const contactDetails = [
-  {
-    icon: Phone,
-    title: "Phone",
-    content: "+86 138 1513 8483",
-    href: "tel:+8613815138483",
-  },
-  {
-    icon: Mail,
-    title: "Email",
-    content: "info@zeshunequipment.com",
-    href: "mailto:info@zeshunequipment.com",
-  },
-  {
-    icon: MapPin,
-    title: "Address",
-    content: "No.3 Railway Station Road, Yuecheng Town, Jiangyin City, Jiangsu Province, China",
-    href: null,
-  },
-  {
-    icon: Clock,
-    title: "Business Hours",
-    content: "Monday - Saturday: 8:00 AM - 6:00 PM (GMT+8)",
-    href: null,
-  },
-]
+import { DEFAULT_SITE_SETTINGS, getSiteSettings, type SiteSettings } from "@/lib/site-settings"
 
 export function ContactInfo() {
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS)
+
+  useEffect(() => {
+    let cancelled = false
+    getSiteSettings()
+      .then((settings) => {
+        if (!cancelled) setSiteSettings(settings)
+      })
+      .catch((error) => {
+        console.error("[contact-info] failed to load site settings:", error)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const contactDetails = useMemo(
+    () => [
+      {
+        icon: Phone,
+        title: "Phone",
+        content: siteSettings.phone,
+        href: siteSettings.phoneHref,
+      },
+      {
+        icon: Mail,
+        title: "Email",
+        content: siteSettings.email,
+        href: `mailto:${siteSettings.email}`,
+      },
+      {
+        icon: MapPin,
+        title: "Address",
+        content: siteSettings.address,
+        href: null,
+      },
+      {
+        icon: Clock,
+        title: "Business Hours",
+        content: `${siteSettings.businessHours} (GMT+8)`,
+        href: null,
+      },
+    ],
+    [siteSettings],
+  )
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -45,7 +67,7 @@ export function ContactInfo() {
           Our team is available to answer your questions and provide technical support.
         </p>
         <a
-          href="tel:+8613815138483"
+          href={siteSettings.phoneHref}
           className="inline-block px-6 py-2.5 bg-background text-foreground font-semibold rounded-lg hover:bg-background/90 transition-colors"
         >
           Call Now

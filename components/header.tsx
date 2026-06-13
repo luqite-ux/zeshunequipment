@@ -6,6 +6,8 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, ChevronDown, Phone, Mail, MapPin, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { getProductCategories, type ProductCategory } from "@/lib/products-db"
+import { DEFAULT_SITE_SETTINGS, getSiteSettings, type SiteSettings } from "@/lib/site-settings"
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -30,24 +32,24 @@ const navigation = [
   { name: "Contact", href: "/contact" },
 ]
 
-// Static product categories for the header (these don't need to come from DB for navigation)
-const productCategories = [
-  { slug: "production-line", nameEn: "Production Line Systems" },
-  { slug: "emulsifying", nameEn: "Emulsifying Equipment" },
-  { slug: "mixing", nameEn: "Mixing Equipment" },
-  { slug: "dispersing", nameEn: "Dispersing Equipment" },
-  { slug: "storage-tank", nameEn: "Storage Tanks" },
-  { slug: "reactor", nameEn: "Reactor Equipment" },
-  { slug: "heat-exchange", nameEn: "Heat Exchange Equipment" },
-  { slug: "conveying", nameEn: "Mixing & Conveying" },
-  { slug: "auxiliary", nameEn: "Auxiliary Equipment" },
+const fallbackProductCategories: ProductCategory[] = [
+  { slug: "production-line", name: "Production Line Systems", nameEn: "Production Line Systems" },
+  { slug: "emulsifying", name: "Emulsifying Equipment", nameEn: "Emulsifying Equipment" },
+  { slug: "mixing", name: "Mixing Equipment", nameEn: "Mixing Equipment" },
+  { slug: "dispersing", name: "Dispersing Equipment", nameEn: "Dispersing Equipment" },
+  { slug: "storage-tank", name: "Storage Tanks", nameEn: "Storage Tanks" },
+  { slug: "reactor", name: "Reactor Equipment", nameEn: "Reactor Equipment" },
+  { slug: "heat-exchange", name: "Heat Exchange Equipment", nameEn: "Heat Exchange Equipment" },
+  { slug: "conveying", name: "Mixing & Conveying", nameEn: "Mixing & Conveying" },
+  { slug: "auxiliary", name: "Auxiliary Equipment", nameEn: "Auxiliary Equipment" },
 ]
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [activeMegaCategory, setActiveMegaCategory] = useState<string | null>(null)
+  const [productCategories, setProductCategories] = useState<ProductCategory[]>(fallbackProductCategories)
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,6 +59,24 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  useEffect(() => {
+    let cancelled = false
+
+    Promise.all([getProductCategories(), getSiteSettings()])
+      .then(([categories, settings]) => {
+        if (cancelled) return
+        if (categories.length > 0) setProductCategories(categories)
+        setSiteSettings(settings)
+      })
+      .catch((error) => {
+        console.error("[header] failed to load dynamic navigation:", error)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Top Bar */}
@@ -64,18 +84,18 @@ export function Header() {
         <div className="container mx-auto px-4 py-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-4 md:gap-6">
-              <a href="tel:+8613815138483" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+              <a href={siteSettings.phoneHref} className="flex items-center gap-1.5 hover:text-primary transition-colors">
                 <Phone className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">+86 138 1513 8483</span>
+                <span className="hidden sm:inline">{siteSettings.phone}</span>
               </a>
-              <a href="mailto:info@zeshunequipment.com" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+              <a href={`mailto:${siteSettings.email}`} className="flex items-center gap-1.5 hover:text-primary transition-colors">
                 <Mail className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">info@zeshunequipment.com</span>
+                <span className="hidden sm:inline">{siteSettings.email}</span>
               </a>
             </div>
             <div className="flex items-center gap-1.5 text-background/70">
               <MapPin className="h-3.5 w-3.5" />
-              <span className="hidden md:inline">No.3 Railway Station Road, Yuecheng Town, Jiangyin, China</span>
+              <span className="hidden md:inline">{siteSettings.address}</span>
             </div>
           </div>
         </div>
@@ -109,14 +129,10 @@ export function Header() {
                   onMouseEnter={() => {
                     if (item.isMegaMenu || item.children) {
                       setActiveDropdown(item.name)
-                      if (item.isMegaMenu && productCategories.length > 0) {
-                        setActiveMegaCategory(productCategories[0].slug)
-                      }
                     }
                   }}
                   onMouseLeave={() => {
                     setActiveDropdown(null)
-                    setActiveMegaCategory(null)
                   }}
                 >
                   <Link

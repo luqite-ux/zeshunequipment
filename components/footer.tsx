@@ -1,20 +1,28 @@
 "use client"
 
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Phone, Mail, MapPin, Clock, Linkedin, Facebook, Youtube, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { getProductCategories, type ProductCategory } from "@/lib/products-db"
+import { DEFAULT_SITE_SETTINGS, getSiteSettings, type SiteSettings } from "@/lib/site-settings"
+
+const fallbackProductCategories: ProductCategory[] = [
+  { slug: "mixers", name: "Mixers & Agitators", nameEn: "Mixers & Agitators" },
+  { slug: "dispersers", name: "Dispersers & Emulsifiers", nameEn: "Dispersers & Emulsifiers" },
+  { slug: "storage-systems", name: "Storage & Tank Systems", nameEn: "Storage & Tank Systems" },
+  { slug: "chemical-treatment", name: "Chemical Treatment Equipment", nameEn: "Chemical Treatment Equipment" },
+  { slug: "storage-silo-equipment", name: "Storage & Silo Equipment", nameEn: "Storage & Silo Equipment" },
+  {
+    slug: "mixing-dispersing-equipment",
+    name: "Mixing & Dispersing Equipment",
+    nameEn: "Mixing & Dispersing Equipment",
+  },
+]
 
 const footerLinks = {
-  products: [
-    { name: "Mixing Equipment", href: "/products#mixing" },
-    { name: "Emulsifiers", href: "/products#emulsifier" },
-    { name: "High Shear Dispersers", href: "/products#disperser" },
-    { name: "Powder Dosing Systems", href: "/products#dosing" },
-    { name: "Storage Tanks", href: "/products#tanks" },
-    { name: "Reactors", href: "/products#reactors" },
-  ],
   industries: [
     { name: "Chemical Industry", href: "/solutions#chemical" },
     { name: "Lithium Battery", href: "/solutions#lithium" },
@@ -30,6 +38,36 @@ const footerLinks = {
 }
 
 export function Footer() {
+  const [productCategories, setProductCategories] = useState<ProductCategory[]>(fallbackProductCategories)
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS)
+
+  useEffect(() => {
+    let cancelled = false
+
+    Promise.all([getProductCategories(), getSiteSettings()])
+      .then(([categories, settings]) => {
+        if (cancelled) return
+        if (categories.length > 0) setProductCategories(categories)
+        setSiteSettings(settings)
+      })
+      .catch((error) => {
+        console.error("[footer] failed to load dynamic footer data:", error)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const productLinks = useMemo(
+    () =>
+      productCategories.slice(0, 8).map((category) => ({
+        name: category.nameEn,
+        href: `/products?category=${category.slug}`,
+      })),
+    [productCategories],
+  )
+
   return (
     <footer className="bg-foreground text-background">
       {/* Main Footer */}
@@ -40,38 +78,37 @@ export function Footer() {
             <Link href="/" className="inline-block mb-6">
               <Image
                 src="/images/logo.png"
-                alt="Zeshun Machinery"
+                alt={siteSettings.siteTitle}
                 width={180}
                 height={50}
                 className="h-12 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-background/80 mb-6 leading-relaxed">
-              JIANGYIN ZESHUN MACHINERY CO., LTD. specializes in stainless steel non-standard custom equipment,
-              providing professional solutions for chemical, lithium battery, pharmaceutical, and food industries.
+              {siteSettings.siteDescription}
             </p>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-primary mt-0.5 shrink-0" />
                 <span className="text-background/80 text-sm">
-                  No.3 Railway Station Road, Yuecheng Town, Jiangyin City, Jiangsu Province, China
+                  {siteSettings.address}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-primary shrink-0" />
-                <a href="tel:+8613815138483" className="text-background/80 text-sm hover:text-primary transition-colors">
-                  +86 138 1513 8483
+                <a href={siteSettings.phoneHref} className="text-background/80 text-sm hover:text-primary transition-colors">
+                  {siteSettings.phone}
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-primary shrink-0" />
-                <a href="mailto:info@zeshunequipment.com" className="text-background/80 text-sm hover:text-primary transition-colors">
-                  info@zeshunequipment.com
+                <a href={`mailto:${siteSettings.email}`} className="text-background/80 text-sm hover:text-primary transition-colors">
+                  {siteSettings.email}
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="h-5 w-5 text-primary shrink-0" />
-                <span className="text-background/80 text-sm">Mon - Sat: 8:00 AM - 6:00 PM</span>
+                <span className="text-background/80 text-sm">{siteSettings.businessHours}</span>
               </div>
             </div>
           </div>
@@ -80,7 +117,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-background">Products</h3>
             <ul className="space-y-2.5">
-              {footerLinks.products.map((link) => (
+              {productLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -144,21 +181,21 @@ export function Footer() {
               <h4 className="text-sm font-semibold mb-3 text-background">Follow Us</h4>
               <div className="flex gap-3">
                 <a
-                  href="#"
+                  href={siteSettings.socialLinks.linkedin || "#"}
                   className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:bg-primary transition-colors"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
                 </a>
                 <a
-                  href="#"
+                  href={siteSettings.socialLinks.facebook || "#"}
                   className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:bg-primary transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="h-5 w-5" />
                 </a>
                 <a
-                  href="#"
+                  href={siteSettings.socialLinks.youtube || "#"}
                   className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:bg-primary transition-colors"
                   aria-label="YouTube"
                 >
@@ -175,7 +212,7 @@ export function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-background/60 text-sm text-center md:text-left">
-              &copy; {new Date().getFullYear()} JIANGYIN ZESHUN MACHINERY CO., LTD. All rights reserved.
+              &copy; {new Date().getFullYear()} {siteSettings.companyName}. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <Link href="/privacy" className="text-background/60 text-sm hover:text-primary transition-colors">
