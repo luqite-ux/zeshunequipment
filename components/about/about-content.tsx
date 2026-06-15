@@ -33,15 +33,14 @@ export function AboutContent() {
                 Our company was established in 2021, covering an area of approximately 8,000 square meters, currently employing 80 staff members with 500 partners; manufacturing is done according to international standards, following international norms such as ASME, JIS, KS, and all equipment undergoes a triple quality inspection of 'raw material testing - process control - finished product testing'; serving 400 domestic customers and 100 overseas customers (including the Middle East, Southeast Asia, etc.), with an annual production capacity of 500 units, and plans to continuously expand in the future to achieve higher output value.
               </p>
               <p>
-                <b>Main Products<b/><br>
+                <b>Main Products</b><br />
 High/low speed dispersers, multi-functional mixers, vertical/horizontal ribbon mixers, concentric twin-shaft mixers, etc.;
 Various reactors/tanks/vessels, heat exchange/condensers, silos/storage/mixing/stirring/conveying equipment;
 Design, manufacturing and installation of complete control systems;
 Non-standard customization of equipment for various industries.
               </p>
               <p>
-                <b>Main Products<b/><br>
-<b>Technical Highlights<b/><br>
+                <b>Technical Highlights</b><br />
 High-precision manufacturing: Adopt advanced manufacturing processes and quality control system to ensure equipment accuracy and performance reach the industry-leading level.
 Surface treatment technology: Have excellent surface treatment technical team and fully automatic polishing equipment, providing mirror surface, wire drawing, matte, polishing, sandblasting, spray painting and other process treatments, ensuring the equipment is beautiful in appearance and corrosion-resistant.
 Ultrasonic cleaning: Adopt ultrasonic cleaning technology to comprehensively clean the inside and outside of the equipment, ensuring product cleanliness and improving service life.
