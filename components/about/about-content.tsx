@@ -47,6 +47,7 @@ Surface treatment technology: Have excellent surface treatment technical team an
 Ultrasonic cleaning: Adopt ultrasonic cleaning technology to comprehensively clean the inside and outside of the equipment, ensuring product cleanliness and improving service life.
               </p>
             </div>
+            
 
             <div className="grid grid-cols-2 gap-4 mt-8">
               {highlights.map((item, index) => (
