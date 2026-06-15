@@ -6,7 +6,7 @@ import { MapPin, Users, Award, Calendar } from "lucide-react"
 
 const highlights = [
   { icon: MapPin, label: "Location", value: "Jiangyin, Jiangsu, China" },
-  { icon: Users, label: "Facility Size", value: "15,000 m²" },
+  { icon: Users, label: "Facility Size", value: "8,000 m²" },
   { icon: Award, label: "Patents", value: "20+ Honors" },
   { icon: Calendar, label: "Established", value: "2021" },
 ]
