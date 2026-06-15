@@ -30,17 +30,21 @@ export function AboutContent() {
                 Jiangyin Zeshun has been deeply engaged for many years in the field of manufacturing mixing, emulsifying, high-shear dispersion, and powder automatic batching systems and mixing equipment, with outstanding professional design and production R&D capabilities. It is a technology-oriented enterprise integrating R&D, manufacturing, sales, and service, and its products are widely used in chemical, lithium battery, pharmaceutical, food, and other fields..
               </p>
               <p>
-                Our products are mainly used in the chemical, lithium battery, pharmaceutical, and food 
-                industries. We have formed differentiated advantages in mixing, emulsification, high-shear 
-                dispersion, powder automated batching systems, and mixing equipment manufacturing, with a 
-                special focus on the R&D and production of stainless steel non-standard custom equipment.
+                Our company was established in 2021, covering an area of approximately 8,000 square meters, currently employing 80 staff members with 500 partners; manufacturing is done according to international standards, following international norms such as ASME, JIS, KS, and all equipment undergoes a triple quality inspection of 'raw material testing - process control - finished product testing'; serving 400 domestic customers and 100 overseas customers (including the Middle East, Southeast Asia, etc.), with an annual production capacity of 500 units, and plans to continuously expand in the future to achieve higher output value.
               </p>
               <p>
-                We adhere to high-precision manufacturing, adopting advanced manufacturing processes and 
-                strict quality control systems to ensure equipment precision and performance reach industry-leading 
-                levels. Our experienced surface treatment technical team and fully automatic polishing equipment 
-                can provide mirror, brushed, matte, polishing, sandblasting, painting, and other processes, 
-                balancing equipment aesthetics and corrosion resistance.
+                <b>Main Products<b/><br>
+High/low speed dispersers, multi-functional mixers, vertical/horizontal ribbon mixers, concentric twin-shaft mixers, etc.;
+Various reactors/tanks/vessels, heat exchange/condensers, silos/storage/mixing/stirring/conveying equipment;
+Design, manufacturing and installation of complete control systems;
+Non-standard customization of equipment for various industries.
+              </p>
+              <p>
+                <b>Main Products<b/><br>
+<b>Technical Highlights<b/><br>
+High-precision manufacturing: Adopt advanced manufacturing processes and quality control system to ensure equipment accuracy and performance reach the industry-leading level.
+Surface treatment technology: Have excellent surface treatment technical team and fully automatic polishing equipment, providing mirror surface, wire drawing, matte, polishing, sandblasting, spray painting and other process treatments, ensuring the equipment is beautiful in appearance and corrosion-resistant.
+Ultrasonic cleaning: Adopt ultrasonic cleaning technology to comprehensively clean the inside and outside of the equipment, ensuring product cleanliness and improving service life.
               </p>
             </div>
 
