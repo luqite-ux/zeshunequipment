@@ -27,10 +27,7 @@ export function AboutContent() {
             </h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                JIANGYIN ZESHUN MACHINERY CO., LTD. was founded in 2021 and is located at No.3 Railway Station 
-                Road, Yuecheng Town, Jiangyin City, Jiangsu Province. With a facility covering 15,000 square 
-                meters, our advantageous location and ample space resources have laid a solid foundation for 
-                the company&apos;s steady development.
+                Jiangyin Zeshun has been deeply engaged for many years in the field of manufacturing mixing, emulsifying, high-shear dispersion, and powder automatic batching systems and mixing equipment, with outstanding professional design and production R&D capabilities. It is a technology-oriented enterprise integrating R&D, manufacturing, sales, and service, and its products are widely used in chemical, lithium battery, pharmaceutical, food, and other fields..
               </p>
               <p>
                 Our products are mainly used in the chemical, lithium battery, pharmaceutical, and food 
