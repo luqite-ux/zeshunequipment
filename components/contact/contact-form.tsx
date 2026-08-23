@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { InquiryCaptchaField } from "@/components/inquiry-captcha-field"
 import { submitInquiry } from "@/lib/submit-inquiry"
 
 export function ContactForm() {
@@ -14,6 +15,7 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
+  const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -27,12 +29,16 @@ export function ContactForm() {
       company: (fd.get("company") as string) || undefined,
       subject: [(fd.get("product") as string), (fd.get("industry") as string)].filter(Boolean).join(" | ") || undefined,
       message: fd.get("message") as string,
+      captchaScope: fd.get("captchaScope") as string,
+      captchaToken: fd.get("captchaToken") as string,
+      captchaAnswer: fd.get("captchaAnswer") as string,
     })
     setIsSubmitting(false)
     if (result.ok) {
       setIsSubmitted(true)
     } else {
       setSubmitError(result.error ?? "Submission failed. Please try again.")
+      setCaptchaRefreshKey((value) => value + 1)
     }
   }
 
@@ -87,6 +93,7 @@ export function ContactForm() {
             <Label htmlFor="product">Product Interest</Label>
             <select 
               id="product" 
+              name="product"
               className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Select a product category</option>
@@ -106,6 +113,7 @@ export function ContactForm() {
           <Label htmlFor="industry">Industry</Label>
           <select 
             id="industry" 
+            name="industry"
             className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="">Select your industry</option>
@@ -159,6 +167,7 @@ export function ContactForm() {
         {submitError && (
           <p className="rounded-md bg-destructive/10 px-4 py-2 text-sm text-destructive">{submitError}</p>
         )}
+        <InquiryCaptchaField refreshKey={captchaRefreshKey} />
         <Button
           type="submit"
           className="w-full bg-primary hover:bg-accent text-primary-foreground font-semibold h-12 text-base"

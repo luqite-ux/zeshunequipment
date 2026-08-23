@@ -7,15 +7,39 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { InquiryCaptchaField } from "@/components/inquiry-captcha-field"
+import { submitInquiry } from "@/lib/submit-inquiry"
 
 export function CTASection() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [fileName, setFileName] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsSubmitted(true)
-    setTimeout(() => setIsSubmitted(false), 3000)
+    setIsSubmitting(true)
+    setSubmitError(null)
+    const fd = new FormData(e.currentTarget)
+    const result = await submitInquiry({
+      name: fd.get("name") as string,
+      email: fd.get("email") as string,
+      phone: (fd.get("phone") as string) || undefined,
+      company: (fd.get("company") as string) || undefined,
+      subject: (fd.get("product") as string) || "Homepage quote request",
+      message: fd.get("message") as string,
+      captchaScope: fd.get("captchaScope") as string,
+      captchaToken: fd.get("captchaToken") as string,
+      captchaAnswer: fd.get("captchaAnswer") as string,
+    })
+    setIsSubmitting(false)
+    if (result.ok) {
+      setIsSubmitted(true)
+    } else {
+      setSubmitError(result.error ?? "Submission failed. Please try again.")
+      setCaptchaRefreshKey((value) => value + 1)
+    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,27 +104,28 @@ export function CTASection() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Your Name *</Label>
-                  <Input id="name" placeholder="John Smith" required />
+                  <Input id="name" name="name" placeholder="John Smith" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="company">Company</Label>
-                  <Input id="company" placeholder="Company Name" />
+                  <Input id="company" name="company" placeholder="Company Name" />
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email *</Label>
-                  <Input id="email" type="email" placeholder="email@example.com" required />
+                  <Input id="email" name="email" type="email" placeholder="email@example.com" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone</Label>
-                  <Input id="phone" placeholder="+1 234 567 890" />
+                  <Input id="phone" name="phone" placeholder="+1 234 567 890" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="product">Product Interest</Label>
                 <select 
                   id="product" 
+                  name="product"
                   className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
                 >
                   <option value="">Select a product category</option>
@@ -117,6 +142,7 @@ export function CTASection() {
                 <Label htmlFor="message">Message *</Label>
                 <Textarea 
                   id="message" 
+                  name="message"
                   placeholder="Please describe your requirements..." 
                   rows={4}
                   required
@@ -146,10 +172,12 @@ export function CTASection() {
                   Supported: PDF, DWG, DXF, STEP, JPG, PNG (Max 10MB)
                 </p>
               </div>
+              {submitError ? <p className="text-sm text-destructive">{submitError}</p> : null}
+              <InquiryCaptchaField refreshKey={captchaRefreshKey} />
               <Button 
                 type="submit" 
                 className="w-full bg-primary hover:bg-accent text-primary-foreground font-semibold h-12"
-                disabled={isSubmitted}
+                disabled={isSubmitted || isSubmitting}
               >
                 {isSubmitted ? (
                   <>
@@ -159,7 +187,7 @@ export function CTASection() {
                 ) : (
                   <>
                     <Send className="h-5 w-5 mr-2" />
-                    Submit Inquiry
+                    {isSubmitting ? "Submitting..." : "Submit Inquiry"}
                   </>
                 )}
               </Button>
