@@ -31,16 +31,22 @@ const slides = [
   },
 ]
 
-export function HeroCarousel() {
+export function HeroCarousel({ values }: { values?: Record<string, unknown> | null }) {
+  const contentSlides = slides.map((slide, index) => ({
+    ...slide,
+    title: String(values?.[`slide${index + 1}-title`] ?? slide.title),
+    subtitle: String(values?.[`slide${index + 1}-subtitle`] ?? slide.subtitle),
+    description: String(values?.[`slide${index + 1}-description`] ?? slide.description),
+  }))
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length)
+    setCurrentSlide((prev) => (prev + 1) % contentSlides.length)
   }, [])
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+    setCurrentSlide((prev) => (prev - 1 + contentSlides.length) % contentSlides.length)
   }, [])
 
   useEffect(() => {
@@ -62,8 +68,8 @@ export function HeroCarousel() {
           className="absolute inset-0"
         >
           <Image
-            src={slides[currentSlide].image}
-            alt={slides[currentSlide].title}
+            src={contentSlides[currentSlide].image}
+            alt={contentSlides[currentSlide].title}
             fill
             className="object-cover"
             priority
@@ -87,13 +93,13 @@ export function HeroCarousel() {
                 ZESHUN MACHINERY
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-background mb-4 leading-tight text-balance">
-                {slides[currentSlide].title}
+                {contentSlides[currentSlide].title}
               </h1>
               <p className="text-xl md:text-2xl text-primary font-medium mb-4">
-                {slides[currentSlide].subtitle}
+                {contentSlides[currentSlide].subtitle}
               </p>
               <p className="text-background/80 text-lg mb-8 leading-relaxed max-w-xl">
-                {slides[currentSlide].description}
+                {contentSlides[currentSlide].description}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button asChild size="lg" className="bg-primary hover:bg-accent text-primary-foreground font-semibold px-8">

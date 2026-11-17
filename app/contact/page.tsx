@@ -3,6 +3,8 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ContactForm } from "@/components/contact/contact-form"
 import { ContactInfo } from "@/components/contact/contact-info"
+import { PageHero } from "@/components/site-content/page-hero"
+import { getSiteContent, pageModule } from "@/lib/site-content/site-content"
 
 export const metadata: Metadata = {
   title: "Contact Us - Request a Quote | Zeshun Machinery",
@@ -10,28 +12,13 @@ export const metadata: Metadata = {
   keywords: "contact Zeshun, request quote, machinery inquiry, custom equipment, B2B inquiry",
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const siteContent = await getSiteContent("en")
   return (
-    <main className="min-h-screen pt-[88px] md:pt-[104px]">
+    <main className="min-h-screen pt-[88px] md:pt-[104px]" data-hq-content-version={siteContent?.version}>
       <Header />
       
-      {/* Page Header */}
-      <section className="bg-foreground py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
-            <span className="inline-block px-4 py-1.5 bg-primary text-primary-foreground text-sm font-semibold rounded-full mb-6">
-              CONTACT US
-            </span>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-background mb-6 leading-tight text-balance">
-              Get in Touch With Our Team
-            </h1>
-            <p className="text-background/80 text-lg leading-relaxed">
-              Have questions about our equipment or need a custom solution? Our engineering team 
-              is ready to assist you. We typically respond within 24 hours.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero values={pageModule(siteContent, "/contact", "page-header")} />
 
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">

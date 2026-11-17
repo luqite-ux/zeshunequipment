@@ -10,19 +10,21 @@ import { CTASection } from "@/components/home/cta-section"
 import { Footer } from "@/components/footer"
 import { getFeaturedProducts } from "@/lib/products-db"
 import { getLatestArticles } from "@/lib/articles-db"
+import { getSiteContent, pageModule } from "@/lib/site-content/site-content"
 
 export const revalidate = 60
 
 export default async function Home() {
-  const [featuredProducts, latestArticles] = await Promise.all([
+  const [featuredProducts, latestArticles, siteContent] = await Promise.all([
     getFeaturedProducts(6),
     getLatestArticles(3),
+    getSiteContent("en"),
   ])
 
   return (
-    <main className="min-h-screen pt-[88px] md:pt-[104px]">
+    <main className="min-h-screen pt-[88px] md:pt-[104px]" data-hq-content-version={siteContent?.version}>
       <Header />
-      <HeroCarousel />
+      <HeroCarousel values={pageModule(siteContent, "/", "hero")} />
       <StatsCounter />
       <BusinessScope products={featuredProducts} />
       <HomeIndustries />

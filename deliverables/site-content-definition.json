@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "pages": [
+    {"key":"home","path":"/","label":"首页","modules":[
+      {"key":"hero","type":"hero","label":"首页轮播文案","canHide":false,"canReorder":false,"fields":[
+        {"key":"slide1-title","type":"text","label":"第一屏标题","localized":true,"required":true,"maxLength":120},
+        {"key":"slide1-subtitle","type":"text","label":"第一屏副标题","localized":true,"required":true,"maxLength":160},
+        {"key":"slide1-description","type":"textarea","label":"第一屏说明","localized":true,"required":true,"maxLength":500},
+        {"key":"slide2-title","type":"text","label":"第二屏标题","localized":true,"required":true,"maxLength":120},
+        {"key":"slide2-subtitle","type":"text","label":"第二屏副标题","localized":true,"required":true,"maxLength":160},
+        {"key":"slide2-description","type":"textarea","label":"第二屏说明","localized":true,"required":true,"maxLength":500},
+        {"key":"slide3-title","type":"text","label":"第三屏标题","localized":true,"required":true,"maxLength":120},
+        {"key":"slide3-subtitle","type":"text","label":"第三屏副标题","localized":true,"required":true,"maxLength":160},
+        {"key":"slide3-description","type":"textarea","label":"第三屏说明","localized":true,"required":true,"maxLength":500}
+      ]}
+    ]},
+    {"key":"about","path":"/about","label":"关于我们","modules":[{"key":"page-header","type":"page-header","label":"页面首屏","canHide":false,"canReorder":false,"fields":[{"key":"eyebrow","type":"text","label":"栏目标签","localized":true,"required":true,"maxLength":80},{"key":"title","type":"text","label":"标题","localized":true,"required":true,"maxLength":160},{"key":"description","type":"textarea","label":"说明","localized":true,"required":true,"maxLength":600}]}]},
+    {"key":"solutions","path":"/solutions","label":"行业方案","modules":[{"key":"page-header","type":"page-header","label":"页面首屏","canHide":false,"canReorder":false,"fields":[{"key":"eyebrow","type":"text","label":"栏目标签","localized":true,"required":true,"maxLength":80},{"key":"title","type":"text","label":"标题","localized":true,"required":true,"maxLength":160},{"key":"description","type":"textarea","label":"说明","localized":true,"required":true,"maxLength":600}]}]},
+    {"key":"cases","path":"/cases","label":"工程案例","modules":[{"key":"page-header","type":"page-header","label":"页面首屏","canHide":false,"canReorder":false,"fields":[{"key":"eyebrow","type":"text","label":"栏目标签","localized":true,"required":true,"maxLength":80},{"key":"title","type":"text","label":"标题","localized":true,"required":true,"maxLength":160},{"key":"description","type":"textarea","label":"说明","localized":true,"required":true,"maxLength":600}]}]},
+    {"key":"contact","path":"/contact","label":"联系我们","modules":[{"key":"page-header","type":"page-header","label":"页面首屏","canHide":false,"canReorder":false,"fields":[{"key":"eyebrow","type":"text","label":"栏目标签","localized":true,"required":true,"maxLength":80},{"key":"title","type":"text","label":"标题","localized":true,"required":true,"maxLength":160},{"key":"description","type":"textarea","label":"说明","localized":true,"required":true,"maxLength":600}]}]}
+  ]
+}
